@@ -2,10 +2,10 @@
   "name": "mrms-radar-backend",
   "version": "1.0.0",
   "description": "Backend API for MRMS Weather Radar",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.18.2",
