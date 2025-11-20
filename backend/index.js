@@ -44,8 +44,7 @@ app.get('/api/radar/latest', async (req, res) => {
                 se: [25.0, -67.0],
                 sw: [25.0, -125.0]
             },
-            status: 'active',
-            nextUpdate: new Date(Date.now() + 2 * 60 * 1000).toISOString()
+            status: 'active'
         };
         
         res.json(radarData);
@@ -61,8 +60,7 @@ app.get('/api/radar/latest', async (req, res) => {
                 se: [25.0, -67.0],
                 sw: [25.0, -125.0]
             },
-            status: 'sample_data',
-            message: 'Using sample data - real MRMS data unavailable'
+            status: 'sample_data'
         };
         
         res.json(sampleData);
@@ -84,12 +82,11 @@ app.get('/', (req, res) => {
         endpoints: {
             '/api/radar/latest': 'Get latest radar data',
             '/api/health': 'Health check'
-        },
-        source: 'https://mrms.ncep.noaa.gov/'
+        }
     });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
