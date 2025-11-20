@@ -1,17 +1,15 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const path = require('path');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 const MRMS_BASE = 'https://mrms.ncep.noaa.gov/data';
-let currentRadarData = null;
+
 app.get('/api/radar/latest', async (req, res) => {
     try {
-        console.log('Fetching latest RALA data from MRMS...');
         const radarUrls = [
             `${MRMS_BASE}/2D/RALA/MRMS_RALA_latest.grib2.gz`,
             `${MRMS_BASE}/2D/ReflectivityAtLowestAltitude/MRMS_ReflectivityAtLowestAltitude_latest.grib2.gz`,
@@ -19,17 +17,15 @@ app.get('/api/radar/latest', async (req, res) => {
         ];
         
         let successfulUrl = null;
-        let response = null;
+        
         for (const url of radarUrls) {
             try {
-                console.log(`Trying: ${url}`);
-                response = await axios.head(url, { timeout: 10000 });
+                const response = await axios.head(url, { timeout: 10000 });
                 if (response.status === 200) {
                     successfulUrl = url;
                     break;
                 }
             } catch (error) {
-                console.log(`Failed: ${url}`);
                 continue;
             }
         }
@@ -38,7 +34,6 @@ app.get('/api/radar/latest', async (req, res) => {
             throw new Error('Could not find accessible RALA data');
         }
         
-        console.log(`Found RALA data at: ${successfulUrl}`);
         const radarData = {
             dataUrl: successfulUrl,
             timestamp: new Date().toISOString(),
@@ -53,11 +48,9 @@ app.get('/api/radar/latest', async (req, res) => {
             nextUpdate: new Date(Date.now() + 2 * 60 * 1000).toISOString()
         };
         
-        currentRadarData = radarData;
         res.json(radarData);
         
     } catch (error) {
-        console.error('Error fetching radar data:', error);
         const sampleData = {
             sample: true,
             timestamp: new Date().toISOString(),
@@ -85,17 +78,18 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+app.get('/', (req, res) => {
+    res.json({
+        name: 'MRMS RALA Radar API',
+        endpoints: {
+            '/api/radar/latest': 'Get latest radar data',
+            '/api/health': 'Health check'
+        },
+        source: 'https://mrms.ncep.noaa.gov/'
     });
-}
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`🚀 MRMS Radar Server running on port ${PORT}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`📡 Radar API: http://localhost:${PORT}/api/radar/latest`);
+    console.log(`Server running on port ${PORT}`);
 });
