@@ -1,3 +1,6 @@
 # Dependencies
 backend/node_modules/
 client/node_modules/
+backend/yarn.lock
+client/yarn.lock
+client/build
