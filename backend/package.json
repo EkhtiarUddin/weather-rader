@@ -1,7 +1,7 @@
 {
   "name": "mrms-radar-backend",
   "version": "1.0.0",
-  "description": "Backend for MRMS Weather Radar Display",
+  "description": "Backend API for MRMS Weather Radar",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
