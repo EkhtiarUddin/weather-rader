@@ -10,7 +10,7 @@ function App() {
   const canvasRef = useRef();
 
   const API_BASE = process.env.NODE_ENV === 'production'
-    ? 'https://weather-rader.onrender.com/'
+    ? 'https://weather-rader.onrender.com'
     : 'http://localhost:5000';
 
   const fetchRadarData = async () => {
